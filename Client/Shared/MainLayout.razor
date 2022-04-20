@@ -1,0 +1,52 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+
+
+
+    <main>
+
+        <div class="top-row" style="justify-content:space-between!important;height: 5rem;">
+            <div>
+                <RadzenCard Style="margin-bottom: 0px; width: fit-content; min-width: 200px;padding: 1px!important;" Class="ml-2">
+                    <RadzenMenu Click="OnParentClicked">
+                            <RadzenMenuItem Text="" Icon="home" Path="/" style="font-size: 18px; padding-right: 10px;"></RadzenMenuItem>
+                            <RadzenMenuItem Text="社員情報" Icon="payment">
+                                <RadzenMenuItem Text="社員一覧" Path="employee_list" Icon="check_circle"></RadzenMenuItem>
+                                <RadzenMenuItem Text="社員登録" Path="employee_regist" Icon="input"></RadzenMenuItem>
+                            </RadzenMenuItem>
+                            <RadzenMenuItem Text="給与情報" Icon="save">
+                                <RadzenMenuItem Text="給与一覧" Path="" Icon="grid_on"></RadzenMenuItem>
+                                <RadzenMenuItem Text="給与登録" Path="" Icon="list"></RadzenMenuItem>
+                                <RadzenMenuItem Text="賞与一覧" Path="" Icon="dns"></RadzenMenuItem>
+                                <RadzenMenuItem Text="賞与登録" Path="" Icon="receipt"></RadzenMenuItem>
+                            </RadzenMenuItem>
+                            <RadzenMenuItem Text="勤怠情報" Icon="account_box">
+                                <RadzenMenuItem Text="勤怠一覧" Path="" Icon="tab"></RadzenMenuItem>
+                                <RadzenMenuItem Text="勤怠登録" Path="" Icon="content_paste"></RadzenMenuItem>
+                            </RadzenMenuItem>
+                    </RadzenMenu>
+                </RadzenCard>
+            </div>
+            <div>
+                <a href="/">Logout</a>
+                <a href="https://www.avnz.co.jp/" target="_blank">About</a>
+            </div>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code
+{
+    void OnParentClicked(MenuItemEventArgs args)
+    {
+    }
+
+    void OnChildClicked(MenuItemEventArgs args)
+    {
+    }
+}

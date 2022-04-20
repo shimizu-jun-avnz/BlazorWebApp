@@ -1,0 +1,135 @@
+﻿@using BlazorWebApp.Shared.Models
+@using System.Collections
+@using System.Diagnostics
+@using System.Text.Json
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@inject HttpClient Http
+
+@page "/employee_regist"
+
+<div class="container-fluid">
+    <RadzenTemplateForm TItem="Employee" Data=@emp Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+        <div class="row justify-content-start">
+            <div class="col-lg-auto">
+                <RadzenIcon Icon="supervisor_account" IconStyle="IconStyle.Secondary" style="font-size: 42px;"></RadzenIcon>
+            </div>
+            <div class="col">
+                <H2 style="padding-top: 8px">社員登録</H2>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 10px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="社員番号" />
+            </div>
+            <div class="col-lg-11">
+                <RadzenTextBox Name="EmpNo" @bind-Value=@emp.Emp_no style="width: 100px; display: block"></RadzenTextBox>
+                <RadzenRequiredValidator Component="EmpNo" Text="EmpNo is required" Popup=@popup Style="position: absolute"/>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="氏名" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenTextBox @bind-Value=@emp.Name style="width: 200px; display: block"></RadzenTextBox>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="生年月日" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenDatePicker @bind-Value=@emp.Birth_day DateFormat="d" style="width: 200px"></RadzenDatePicker>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="入社年月日" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenDatePicker @bind-Value=@emp.Enter_day DateFormat="d" style="width: 200px; display: block"></RadzenDatePicker>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="退職年月日" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenDatePicker @bind-Value=@emp.Retirement_day DateFormat="d" style="width: 200px; display: block"></RadzenDatePicker>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="役職" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenNumeric  @bind-Value=@emp.Job_rank style="width: 200px; display: block"></RadzenNumeric>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="所属部署" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenNumeric  @bind-Value=@emp.Belongs_department style="width: 200px; display: block"></RadzenNumeric>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="所属課" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenNumeric  @bind-Value=@emp.Belongs_division style="width: 200px; display: block"></RadzenNumeric>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 25px;">
+            <div class="col-lg-1">
+                <RadzenLabel Text="顔写真" />
+            </div>
+            <div class="col-lg-4">
+                <RadzenUpload Multiple="true" Class="w-100"></RadzenUpload>
+            </div>
+        </div>
+
+        <div class="row justify-content-start" style="padding-top: 50px; padding-bottom: 25px;">
+            <div class="col-lg-auto">
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Secondary" IsBusy=@busy style="width: 160px" ><RadzenIcon Icon="save"/>Regist</RadzenButton>
+            </div>
+        </div>
+    </RadzenTemplateForm>
+</div>
+@code {
+
+    Employee emp = new Employee();
+    /// <summary>
+    /// 
+    /// </summary>
+    bool busy;
+    bool popup = false;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    async Task OnSubmit(Employee model)
+    {
+        busy = true;
+        emp.Gender = 1;
+        emp.Picture_file_name = "images/photo/" + emp.Emp_no + ".jpg";
+        // api/Employees post Employee
+        HttpResponseMessage response =
+             await Http.PostAsJsonAsync("api/Employees", emp);
+
+        if (response.IsSuccessStatusCode)
+        {
+            emp = new Employee();
+        }
+        busy = false;
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        Console.WriteLine($"InvalidSubmit: {JsonSerializer.Serialize(args, new JsonSerializerOptions() {  WriteIndented = true })}");
+    }
+
+}

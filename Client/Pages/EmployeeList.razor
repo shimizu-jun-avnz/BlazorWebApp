@@ -1,0 +1,116 @@
+
+@using BlazorWebApp.Shared.Models
+@using System.Collections
+@inject HttpClient Http
+
+@page "/employee_list"
+
+<div class="container-fluid">
+        <div class="row justify-content-start">
+            <div class="col-lg-auto">
+                <RadzenIcon Icon="supervisor_account" IconStyle="IconStyle.Secondary" style="font-size: 42px;"></RadzenIcon>
+            </div>
+            <div class="col">
+                <H2 style="padding-top: 8px">社員一覧</H2>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 10px;">
+            <div class="col-lg-auto">
+                <RadzenLabel Text="社員番号" />
+                <RadzenTextBox style="width: 100px"></RadzenTextBox>
+            </div>
+            <div class="col-lg-auto">
+                <RadzenLabel Text="氏名" />
+                <RadzenTextBox style="width: 200px"></RadzenTextBox>
+            </div>
+        </div>
+        <div class="row justify-content-start" style="margin-top: 10px;">
+            <div class="col-lg-auto">
+                <RadzenLabel Text="入社年月日 From" />
+                <RadzenTextBox></RadzenTextBox>
+            </div>
+            <div class="col-lg-auto">
+                <RadzenLabel style="padding-top: 5px;" Text="～" />
+            </div>
+            <div class="col-lg-auto">
+                <RadzenLabel Text="To" />
+                <RadzenTextBox></RadzenTextBox>
+            </div>
+        </div>
+
+        <div class="row justify-content-end" style="padding-top: 10px; padding-bottom: 10px;">
+            <div class="col-lg-auto">
+                <RadzenButton ButtonStyle="ButtonStyle.Secondary" IsBusy=@busy style="width: 160px" Click=@OnClick ><RadzenIcon Icon="person_search"/>Search</RadzenButton>
+            </div>
+        </div>
+
+        <div class="row justify-content-between">
+            <hr>
+        </div>
+
+        <RadzenDataGrid TItem="Employee" Data="@employeeList">
+            <Columns>
+                <RadzenDataGridColumn TItem="Employee" Property="Emp_no" Title="社員番号"  Width="70px" />
+                <RadzenDataGridColumn TItem="Employee" Title="Photo" Sortable="false" Width="50px" >
+                    <Template Context="data">
+                        <RadzenImage Path="@data.Picture_file_name" style="width: 40px; height: 40px; border-radius: 8px;" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Employee" Property="Name" Title="氏名"  Width="150px" />
+                <RadzenDataGridColumn TItem="Employee" Property="JobName.Job_name" Title="役職"  Width="100px" />
+                <RadzenDataGridColumn TItem="Employee" Property="DepartmentName.Department_name" Title="部署" Width="200px" />
+                <RadzenDataGridColumn TItem="Employee" Property="DivisionName.Division_name" Title="課" Width="200px" />
+                <RadzenDataGridColumn TItem="Employee" Property="Birth_day" Title="生年月日" Width="100px" />
+                <RadzenDataGridColumn TItem="Employee" Property="Enter_day" Title="入社日" Width="100px" />
+            </Columns>
+        </RadzenDataGrid>
+</div>
+
+@code {
+    /// <summary>
+    /// 
+    /// </summary>
+    private List<Employee>? employeeList;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    bool busy;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    protected override async Task OnInitializedAsync()
+    {
+        // エラー処理が無ければこれでOK
+        //employeeList = await Http.GetFromJsonAsync<List<Employee>>("api/Employees");
+
+        // 真面目に実装した版
+        HttpResponseMessage res = await Http.GetAsync("api/Employees");
+        if (res.IsSuccessStatusCode)
+        {
+            employeeList = await res.Content.ReadFromJsonAsync<List<Employee>>();
+        }
+        else
+        {
+            string errMsg = await res.Content.ReadAsStringAsync();
+            Console.WriteLine(errMsg);
+            throw new Exception(errMsg);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    async Task OnClick()
+    {
+        busy = true;
+        employeeList = await Http.GetFromJsonAsync<List<Employee>>("api/Employees");
+        busy = false;
+    }
+
+}
+    
