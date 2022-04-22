@@ -3,13 +3,13 @@ using BlazorWebApp.Shared.Models;
 
 namespace BlazorWebApp.Server.Data
 {
-    public class GeneralCodeMasterDbContext : DbContext
+    public class General_code_masterDbContext : DbContext
     {
-        public GeneralCodeMasterDbContext(DbContextOptions<GeneralCodeMasterDbContext> options) : base(options)
+        public General_code_masterDbContext(DbContextOptions<General_code_masterDbContext> options) : base(options)
         {
         }
 
-        public DbSet<General_code_master>? GeneralCodeMaster { get; set; }
+        public DbSet<General_code_master>? General_code_master { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

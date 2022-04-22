@@ -17,13 +17,15 @@
                 <H2 style="padding-top: 8px">社員登録</H2>
             </div>
         </div>
-        <div class="row justify-content-start" style="margin-top: 10px;">
+        <div class="row justify-content-start" style="margin-top: 25px;">
             <div class="col-lg-1">
                 <RadzenLabel Text="社員番号" />
             </div>
-            <div class="col-lg-11">
+            <div class="col-lg-1">
                 <RadzenTextBox Name="EmpNo" @bind-Value=@emp.Emp_no style="width: 100px; display: block"></RadzenTextBox>
-                <RadzenRequiredValidator Component="EmpNo" Text="EmpNo is required" Popup=@popup Style="position: absolute"/>
+            </div>
+            <div class="col-lg-10">
+                <RadzenRequiredValidator Component="EmpNo" Text="社員番号は必須入力項目です。" Popup=@popup Style="position: absolute"/>
             </div>
         </div>
         <div class="row justify-content-start" style="margin-top: 25px;">
@@ -99,13 +101,54 @@
     </RadzenTemplateForm>
 </div>
 @code {
-
-    Employee emp = new Employee();
     /// <summary>
     /// 
     /// </summary>
-    bool busy;
+    List<General_code_master>? genderList = new List<General_code_master>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    List<Department_code_master>? departmentList = new List<Department_code_master>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    List<Division_code_master>? divisionList = new List<Division_code_master>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    List<Job_code_master>? jobList = new List<Job_code_master>();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    Employee emp = new Employee();
+
+    /// <summary>
+    /// 
+    /// </summary>
+    bool busy = false;
+
+    /// <summary>
+    /// 
+    /// </summary>
     bool popup = false;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    protected override async Task OnInitializedAsync()
+    {
+        genderList =  await Http.GetFromJsonAsync<List<General_code_master>>("api/General_code_master");
+        departmentList = await Http.GetFromJsonAsync<List<Department_code_master>>("api/Department_code_master");
+        divisionList = await Http.GetFromJsonAsync<List<Division_code_master>>("api/Division_code_master");
+        jobList = await Http.GetFromJsonAsync<List<Job_code_master>>("api/Job_code_master");
+
+    }
 
     /// <summary>
     /// 
@@ -127,6 +170,11 @@
         busy = false;
     }
 
+    /// <summary>
+    /// 
+    /// 
+    /// </summary>
+    /// <param name="args"></param>
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
     {
         Console.WriteLine($"InvalidSubmit: {JsonSerializer.Serialize(args, new JsonSerializerOptions() {  WriteIndented = true })}");

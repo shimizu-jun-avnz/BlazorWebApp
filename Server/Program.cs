@@ -13,13 +13,16 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<EmployeeDbContext>(
     options => options.UseMySQL(builder.Configuration.GetConnectionString("MySQL")));
 
-builder.Services.AddDbContext<DepartmentCodeMasterDbContext>(
+builder.Services.AddDbContext<Department_code_masterDbContext>(
     options => options.UseMySQL(builder.Configuration.GetConnectionString("MySQL")));
 
-builder.Services.AddDbContext<DivisionCodeMasterDbContext>(
+builder.Services.AddDbContext<Division_code_masterDbContext>(
     options => options.UseMySQL(builder.Configuration.GetConnectionString("MySQL")));
 
-builder.Services.AddDbContext<GeneralCodeMasterDbContext>(
+builder.Services.AddDbContext<General_code_masterDbContext>(
+    options => options.UseMySQL(builder.Configuration.GetConnectionString("MySQL")));
+
+builder.Services.AddDbContext<Job_code_masterDbContext>(
     options => options.UseMySQL(builder.Configuration.GetConnectionString("MySQL")));
 
 var app = builder.Build();
